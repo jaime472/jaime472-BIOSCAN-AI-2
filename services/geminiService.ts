@@ -1,9 +1,14 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { AnalysisResponse } from '../types';
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Função modificada para aceitar a apiKey como parâmetro
+// Isso evita erros de "process is not defined" no navegador
+export const analyzeExamPdf = async (base64Pdf: string, apiKey: string): Promise<AnalysisResponse> => {
+  if (!apiKey) {
+    throw new Error("Chave de API não fornecida.");
+  }
 
-export const analyzeExamPdf = async (base64Pdf: string): Promise<AnalysisResponse> => {
+  const ai = new GoogleGenAI({ apiKey: apiKey });
   const modelId = "gemini-2.5-flash"; // Efficient for text extraction and reasoning
 
   const prompt = `
